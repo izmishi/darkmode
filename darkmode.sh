@@ -72,7 +72,9 @@ darkMode() {
 solar() {
 	# Get Night Shift solar times (UTC)
 	OSv=$(sw_vers -productVersion) # Get macOS version
-	if (( $(bc <<< "$(echo "$OSv" | cut -d '.' -f2) >= 15") == 1 )); then # macOS Catalina or higher
+	if (( $(bc <<< "$(echo "$OSv" | cut -d '.' -f1) >= 11") == 1 )); then # macOS Big Sur or higher
+		parentDir=libexec
+	elif (( $(bc <<< "$(echo "$OSv" | cut -d '.' -f2) >= 15") == 1 )); then # macOS Catalina
 		parentDir=libexec
 	elif (( $(bc <<< "$(echo "$OSv" | cut -d '.' -f2-) >= 12.4") == 1 )); then # Between macOS Sierra 10.12.4 and Catalina
 		parentDir=bin
@@ -80,8 +82,8 @@ solar() {
 		echo "Your macOS version does not support Night Shift. For details visit http://katernet.github.io/darkmode"
 		exit 1
 	fi
-	riseT=$(/usr/"$parentDir"/corebrightnessdiag nightshift-internal | grep nextSunrise | cut -d \" -f2)
-	setT=$(/usr/"$parentDir"/corebrightnessdiag nightshift-internal | grep nextSunset | cut -d \" -f2)
+	riseT=$(/usr/"$parentDir"/corebrightnessdiag sunschedule | grep nextSunrise | cut -d \" -f2)
+	setT=$(/usr/"$parentDir"/corebrightnessdiag sunschedule | grep nextSunset | cut -d \" -f2)
 	# Test for 12 hour format
 	if [[ $riseT == *M* ]] || [[ $setT == *M* ]]; then
 		formatT="%Y-%m-%d %H:%M:%S %p %z"
