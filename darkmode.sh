@@ -18,19 +18,8 @@ darkMode() {
 	case $1 in
 		off)
 			# Disable dark mode
-			osascript -e '
-				tell application id "com.apple.systemevents"
-					tell appearance preferences
-						if dark mode is true then
-							set dark mode to false
-						end if
-					end tell
-				end tell
-			'
-			if ls /Applications/Alfred*.app >/dev/null 2>&1; then # If Alfred installed
-				v=$(basename /Applications/Alfred*.app | tr -dc '0-9') # Get Alfred version number
-				osascript -e 'tell application "Alfred '"$v"'" to set theme "'"$alfredTheme"'"' 2> /dev/null # Set Alfred default theme
-			fi
+			osascript ~/Library/Mobile\ Documents/com\~apple\~ScriptEditor2/Documents/Set\ Apperance\ Smoothly.scpt false
+
 			if [ -d "$darkdir" ]; then # Prevent uninstaller from continuing
 				# Run solar query
 				if [ $# -eq 1 ] || [ -z "$firstRun" ]; then	# If no static time arguments or not first run of script
@@ -61,19 +50,8 @@ darkMode() {
 			;;
 		on)
 			# Enable dark mode
-			osascript -e '
-				tell application id "com.apple.systemevents"
-					tell appearance preferences
-						if dark mode is false then
-							set dark mode to true
-						end if
-					end tell
-				end tell
-			'
-			if ls /Applications/Alfred*.app >/dev/null 2>&1; then
-				v=$(basename /Applications/Alfred*.app | tr -dc '0-9')
-				osascript -e 'tell application "Alfred '"$v"'" to set theme "'"$alfredDarkTheme"'"' 2> /dev/null # Set Alfred dark theme
-			fi
+			osascript ~/Library/Mobile\ Documents/com\~apple\~ScriptEditor2/Documents/Set\ Apperance\ Smoothly.scpt true
+
 			# Get sunrise launch agent start interval time
 			plistRH=$(/usr/libexec/PlistBuddy -c "Print :StartCalendarInterval:Hour" "$plistR" 2> /dev/null)
 			plistRM=$(/usr/libexec/PlistBuddy -c "Print :StartCalendarInterval:Minute" "$plistR" 2> /dev/null)
